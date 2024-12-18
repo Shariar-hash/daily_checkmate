@@ -9,6 +9,7 @@ use App\Http\Controllers\{
     WeeklyReflectionController,
     ProfileController
 };
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -49,6 +50,7 @@ Route::middleware(['auth'])->group(function () {
 
     
     Route::resource('reflections', WeeklyReflectionController::class);
+    Route::get('/fetch-quote', [DashboardController::class, 'fetchQuote']);
 });
 
 
