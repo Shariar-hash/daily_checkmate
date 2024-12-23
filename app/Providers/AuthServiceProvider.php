@@ -2,10 +2,10 @@
 
 namespace App\Providers;
 
-use App\Models\TodoList;
-use App\Policies\TodoListPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
+use App\Models\Reminder;
+use App\Policies\ReminderPolicy;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -15,7 +15,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        TodoList::class => TodoListPolicy::class,
+        Reminder::class => ReminderPolicy::class,
     ];
 
     /**
@@ -27,6 +27,7 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
         
-        // Register any custom gates here if needed
+        // Optional: Additional gate definitions if needed
+        Gate::policy(Reminder::class, ReminderPolicy::class);
     }
 }

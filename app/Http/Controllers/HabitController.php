@@ -1,11 +1,11 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\Habit;
 use App\Services\HabitService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class HabitController extends Controller
 {
@@ -37,15 +37,22 @@ class HabitController extends Controller
 
     public function show(Habit $habit)
     {
-        $this->authorize('view', $habit);
+        
+        if (Gate::denies('view', $habit)) {
+            abort(403, 'You are not authorized to view this habit.');
+        }
+
         $habit->load('logs');
         return view('habits.show', compact('habit'));
     }
 
     public function update(Request $request, Habit $habit)
     {
-        $this->authorize('update', $habit);
         
+        if (Gate::denies('update', $habit)) {
+            abort(403, 'You are not authorized to update this habit.');
+        }
+
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -59,14 +66,22 @@ class HabitController extends Controller
 
     public function logCompletion(Habit $habit)
     {
-        $this->authorize('update', $habit);
+        
+        if (Gate::denies('update', $habit)) {
+            abort(403, 'You are not authorized to log completion for this habit.');
+        }
+
         $this->habitService->logCompletion($habit);
         return redirect()->back()->with('success', 'Habit completion logged');
     }
 
     public function destroy(Habit $habit)
     {
-        $this->authorize('delete', $habit);
+        
+        if (Gate::denies('delete', $habit)) {
+            abort(403, 'You are not authorized to delete this habit.');
+        }
+
         $habit->delete();
         return redirect()->route('habits.index')->with('success', 'Habit deleted successfully');
     }

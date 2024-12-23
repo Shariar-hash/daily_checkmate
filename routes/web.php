@@ -1,24 +1,31 @@
 <?php
-
 use App\Http\Controllers\{
-    TodoListController,
-    TaskController,
-    ReminderController,
-    HabitController,
-    IdeaController,
-    WeeklyReflectionController,
-    ProfileController
+   TodoListController,
+   TaskController,
+   ReminderController,
+   HabitController,
+   IdeaController,
+   WeeklyReflectionController,
+   ProfileController
 };
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 
 Route::get('/', function () {
-    return view('welcome');
+   return view('welcome');
 })->name('welcome');
 
+
 Route::middleware(['auth'])->group(function () {
-    Route::view('/dashboard', 'dashboard')->name('dashboard');
+    Route::get('/dashboard', function () {
+        return view('dashboard', [
+            'recentTasks' => Auth::user()->tasks()->latest()->take(3)->get(),
+            'todaysHabits' => Auth::user()->habits()->get(),
+            'upcomingReminders' => Auth::user()->reminders()->latest()->take(3)->get()
+        ]);
+    })->name('dashboard');
 
     
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -50,8 +57,6 @@ Route::middleware(['auth'])->group(function () {
 
     
     Route::resource('reflections', WeeklyReflectionController::class);
-    Route::get('/fetch-quote', [DashboardController::class, 'fetchQuote']);
 });
-
-
 require __DIR__.'/auth.php';
+

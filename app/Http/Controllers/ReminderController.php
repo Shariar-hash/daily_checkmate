@@ -6,6 +6,8 @@ use App\Models\Reminder;
 use App\Services\ReminderService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
+
 
 class ReminderController extends Controller
 {
@@ -64,7 +66,13 @@ class ReminderController extends Controller
 
     public function destroy(Reminder $reminder)
     {
-        $this->authorize('delete', $reminder);
+        
+        if (Gate::denies('delete', $reminder)) {
+            abort(403, 'You are not authorized to delete this reminder.');
+        }
+    
+        
+    
         $this->reminderService->delete($reminder);
         return redirect()->route('reminders.index')->with('success', 'Reminder deleted successfully');
     }

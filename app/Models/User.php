@@ -31,6 +31,15 @@ class User extends Authenticatable
         return $this->hasMany(TodoList::class);
     }
 
+    
+
+    public function tasks()
+{
+    return $this->hasManyThrough(Task::class, TodoList::class);
+}
+
+
+
     public function reminders()
     {
         return $this->hasMany(Reminder::class);
