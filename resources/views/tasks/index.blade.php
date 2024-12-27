@@ -1,18 +1,21 @@
-{{-- resources/views/tasks/index.blade.php --}}
 @extends('layouts.app')
 
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-12">
-            
             <div class="mb-4">
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createTaskModal">
-                    Add New Task
-                </button>
+                @if($todoList)
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createTaskModal">
+                        Add New Task
+                    </button>
+                @else
+                    <div class="alert alert-warning">
+                        Please create a todo list first to add tasks.
+                    </div>
+                @endif
             </div>
 
-            
             <div class="card">
                 <div class="card-header">Tasks</div>
                 <div class="card-body">
@@ -80,7 +83,7 @@
     </div>
 </div>
 
-
+@if($todoList)
 <div class="modal fade" id="createTaskModal" tabindex="-1" aria-labelledby="createTaskModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -88,7 +91,7 @@
                 <h5 class="modal-title" id="createTaskModalLabel">Create New Task</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form method="POST" action="{{ route('tasks.store', ['todoList' => $todoList ?? null]) }}">
+            <form method="POST" action="{{ route('tasks.store', $todoList) }}">
                 @csrf
                 <div class="modal-body">
                     <div class="mb-3">
@@ -120,7 +123,7 @@
         </div>
     </div>
 </div>
-
+@endif
 
 @foreach($tasks as $task)
 <div class="modal fade" id="editTaskModal{{ $task->id }}" tabindex="-1" aria-labelledby="editTaskModalLabel{{ $task->id }}" aria-hidden="true">

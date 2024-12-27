@@ -1,0 +1,155 @@
+/* Reset */
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+/* Header styling */
+header {
+    width: 100%;
+    height: 100vh;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.2)), url('https://assets.asana.biz/transform/fc024015-148a-447e-967f-69ed4968248d/article-remote-teamwork-best-morning-routine-2x'); /* Correct path for background image */
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    font-family: sans-serif;
+}
+
+/* Navigation styling */
+nav {
+    width: 100%;
+    height: 100px;
+    display: flex;
+    justify-content: space-between; /* Space between logo and menu */
+    align-items: center;
+    padding: 0 50px;
+    color: white;
+}
+
+/* Logo styling */
+.logo {
+    font-size: 2em;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+/* Buttons container */
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Space between Login and Signup buttons */
+}
+
+/* Login button */
+.menu a {
+    text-decoration: none;
+    color: white;
+    padding: 10px 20px;
+    font-size: 20px;
+    border: 2px solid white;
+    border-radius: 8px;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+.menu a:hover {
+    background: white;
+    color: black;
+}
+
+/* Signup button */
+.Signup a {
+    text-decoration: none;
+    color: white;
+    padding: 10px 20px; /* Same padding as Login button */
+    font-size: 20px;
+    border: 2px solid white; /* Same border as Login button */
+    border-radius: 8px; /* Same border radius as Login button */
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+.Signup a:hover {
+    background: white;
+    color: black; /* Match hover effect with Login button */
+}
+
+/* Hero text section */
+.htxt {
+    max-width: 650px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: aliceblue;
+}
+
+.htxt span {
+    letter-spacing: 5px;
+    font-size: 1.5em;
+}
+
+.htxt h1 {
+    font-size: 3.5em;
+    margin: 20px 0;
+}
+
+/* Hero button */
+.htxt a {
+    text-decoration: none;
+    background: indianred;
+    color: white;
+    padding: 10px 20px;
+    letter-spacing: 1px;
+    border-radius: 5px; /* Add rounded edges for button */
+    font-size: 18px;
+    transition: background 0.3s ease;
+}
+
+.htxt a:hover {
+    background: #b53a3a; /* Darker shade on hover */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    nav {
+        flex-direction: column;
+        height: auto;
+    }
+
+    .nav-links {
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    .htxt h1 {
+        font-size: 2.5em;
+    }
+
+    .htxt span {
+        font-size: 1.2em;
+    }
+}
+
+@media (max-width: 480px) {
+    .logo {
+        font-size: 1.5em;
+    }
+
+    .menu a, .Signup a {
+        font-size: 16px;
+    }
+
+    .htxt h1 {
+        font-size: 2em;
+    }
+
+    .htxt span {
+        font-size: 1em;
+    }
+
+    .htxt a {
+        padding: 8px 15px;
+        font-size: 16px;
+    }
+}
