@@ -6,8 +6,10 @@
        <!-- Clock -->
        <div class="card mb-4 shadow-sm">
            <div class="card-body text-center py-3">
-               <div id="clock" class="display-4 mb-0" style="font-size: 3.5rem; font-weight: 300;"></div>
-               <div id="date" class="text-muted"></div>
+               <<div id="clock" class="display-4 mb-0" style="font-size: 3.5rem; font-weight: 300; color: #ff6f61; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);"></div>
+                <div id="date" class="text-muted" style="color: #4caf50;"></div>
+
+              
            </div>
        </div>
 
@@ -200,7 +202,33 @@
         </div>
     </div>
 </div>
+    <!-- Quotes Section -->
+    <<div class="card mt-4 shadow-sm" style="background: linear-gradient(45deg, #6a11cb,rgb(85, 103, 111)); color: white; border-radius: 10px;">
+    <div class="card-body text-center py-4">
+        <div id="quote" class="text-white" style="font-style: italic; font-size: 1.5rem;"></div>
+    </div>
+</div>
    </div>
+
+   <script>
+       // Fetching and displaying the quote
+       function fetchQuote() {
+           const quoteElement = document.getElementById("quote");
+           fetch('/fetch-quote')
+               .then(response => response.json())
+               .then(data => {
+                   if (data.content) {
+                       quoteElement.innerHTML = `"${data.content}"<br><strong>- ${data.author}</strong>`;
+                   } else {
+                       quoteElement.innerHTML = "Failed to load quote.";
+                   }
+               })
+               .catch(error => {
+                   quoteElement.innerHTML = "Failed to load quote.";
+               });
+       }
+       fetchQuote();
+   </script>
 
 
    
@@ -476,4 +504,3 @@
 
    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 </x-app-layout>
-
