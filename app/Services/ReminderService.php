@@ -19,13 +19,11 @@ class ReminderService
     }
 
     public function snooze(Reminder $reminder, \DateTime $snoozedUntil)
-    {
-        $reminder->update([
-            'is_snoozed' => true,
-            'snoozed_until' => $snoozedUntil
-        ]);
-        return $reminder;
-    }
+{
+    $reminder->is_snoozed = true;
+    $reminder->snoozed_until = $snoozedUntil;
+    $reminder->save();
+}
 
     public function delete(Reminder $reminder)
     {

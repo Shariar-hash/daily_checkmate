@@ -18,7 +18,6 @@ class TaskController extends Controller
 
     public function store(Request $request, TodoList $todoList)
     {
-        
         if (Gate::denies('update', $todoList)) {
             abort(403, 'You are not authorized to add tasks to this list.');
         }
@@ -37,7 +36,6 @@ class TaskController extends Controller
 
     public function update(Request $request, Task $task)
     {
-        
         if (Gate::denies('update', $task->todoList)) {
             abort(403, 'You are not authorized to update tasks in this list.');
         }
@@ -50,12 +48,11 @@ class TaskController extends Controller
         ]);
 
         $this->taskService->update($task, $validated);
-        return redirect()->back()->with('success', 'Task updated successfully');
+        return redirect()->route('tasks.index')->with('success', 'Task updated successfully');
     }
 
     public function toggleComplete(Task $task)
     {
-        
         if (Gate::denies('update', $task->todoList)) {
             abort(403, 'You are not authorized to modify tasks in this list.');
         }
@@ -66,7 +63,6 @@ class TaskController extends Controller
 
     public function destroy(Task $task)
     {
-        
         if (Gate::denies('update', $task->todoList)) {
             abort(403, 'You are not authorized to delete tasks from this list.');
         }
@@ -74,11 +70,30 @@ class TaskController extends Controller
         $this->taskService->delete($task);
         return redirect()->back()->with('success', 'Task deleted successfully');
     }
-    public function index()
-{
-    $tasks = auth()->user()->tasks;
-    $todoList = auth()->user()->todoLists()->first(); 
-    return view('tasks.index', compact('tasks', 'todoList'));
-}
 
+    public function index()
+    {
+        $tasks = auth()->user()->tasks;
+        $todoList = auth()->user()->todoLists()->first(); 
+        return view('tasks.index', compact('tasks', 'todoList'));
+    }
+
+    public function create(TodoList $todoList)
+    {
+        if (Gate::denies('update', $todoList)) {
+            abort(403, 'You are not authorized to add tasks to this list.');
+        }
+        return view('tasks.create', compact('todoList'));
+    }
+
+    
+    public function edit(Task $task)
+    {
+        
+        if (Gate::denies('update', $task->todoList)) {
+            abort(403, 'You are not authorized to edit tasks in this list.');
+        }
+
+        return view('tasks.edit', compact('task'));
+    }
 }

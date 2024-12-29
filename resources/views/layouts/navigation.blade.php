@@ -4,15 +4,12 @@
             <div class="flex">
                 <div class="flex-shrink-0 flex items-center">
                     <a href="{{ route('dashboard') }}" class="text-xl font-bold">
-                        {{ config('app.name', 'Productivity App') }}
+                        {{ config('DailyCheckmate', 'DailyCheckmate') }}
                     </a>
                 </div>
                 <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
                     <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                         Dashboard
-                    </x-nav-link>
-                    <x-nav-link href="{{ route('todo-lists.index') }}" :active="request()->routeIs('todo-lists.*')">
-                        Todo Lists
                     </x-nav-link>
                     <x-nav-link href="{{ route('reminders.index') }}" :active="request()->routeIs('reminders.*')">
                         Reminders
@@ -20,11 +17,11 @@
                     <x-nav-link href="{{ route('habits.index') }}" :active="request()->routeIs('habits.*')">
                         Habits
                     </x-nav-link>
-                    <x-nav-link href="{{ route('ideas.index') }}" :active="request()->routeIs('ideas.*')">
-                        Ideas
+                    <x-nav-link href="{{ route('tasks.index') }}" :active="request()->routeIs('ideas.*')">
+                        Tasks
                     </x-nav-link>
-                    <x-nav-link href="{{ route('reflections.index') }}" :active="request()->routeIs('reflections.*')">
-                        Reflections
+                    <x-nav-link href="{{ route('fullcalender.index') }}" :active="request()->routeIs('fullcalender.*')">
+                        Event Calender
                     </x-nav-link>
                 </div>
             </div>

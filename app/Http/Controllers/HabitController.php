@@ -16,6 +16,11 @@ class HabitController extends Controller
         $this->habitService = $habitService;
     }
 
+    public function create()
+    {
+    return view('habits.create');
+    }
+
     public function index()
     {
         $habits = Auth::user()->habits()->withCount('logs')->get();
@@ -74,6 +79,15 @@ class HabitController extends Controller
         $this->habitService->logCompletion($habit);
         return redirect()->back()->with('success', 'Habit completion logged');
     }
+
+    public function edit(Habit $habit)
+{
+    if (Gate::denies('update', $habit)) {
+        abort(403, 'You are not authorized to edit this habit.');
+    }
+
+    return view('habits.edit', compact('habit'));
+}
 
     public function destroy(Habit $habit)
     {

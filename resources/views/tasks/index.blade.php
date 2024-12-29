@@ -1,73 +1,117 @@
-@extends('layouts.app')
-
-@section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-12">
-            <div class="mb-4">
-                @if($todoList)
-                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createTaskModal">
-                        Add New Task
-                    </button>
-                @else
-                    <div class="alert alert-warning">
-                        Please create a todo list first to add tasks.
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50">
+    @include('layouts.navigation')
+    
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="mb-8">
+            @if($todoList)
+                <button type="button" 
+                        class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition-colors duration-150 ease-in-out"
+                        data-bs-toggle="modal" 
+                        data-bs-target="#createTaskModal">
+                    <i class="fas fa-plus mr-2"></i>
+                    Add New Task
+                </button>
+            @else
+                <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-exclamation-triangle text-yellow-400"></i>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm text-yellow-700">
+                                Please create a todo list first to add tasks.
+                            </p>
+                        </div>
                     </div>
-                @endif
-            </div>
+                </div>
+            @endif
+        </div>
 
-            <div class="card">
-                <div class="card-header">Tasks</div>
-                <div class="card-body">
-                    @if($tasks->isEmpty())
-                        <p>No tasks available.</p>
-                    @else
-                        <table class="table">
+        <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+            <div class="border-b border-gray-200 bg-gray-50 px-6 py-4">
+                <h2 class="text-xl font-semibold text-gray-800">Tasks</h2>
+            </div>
+            
+            <div class="px-6 py-4">
+                @if($tasks->isEmpty())
+                    <div class="text-center py-12">
+                        <i class="fas fa-tasks text-gray-300 text-5xl mb-4"></i>
+                        <p class="text-gray-500">No tasks available.</p>
+                    </div>
+                @else
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
                             <thead>
-                                <tr>
-                                    <th>Title</th>
-                                    <th>Description</th>
-                                    <th>Due Date</th>
-                                    <th>Priority</th>
-                                    <th>Status</th>
-                                    <th>Actions</th>
+                                <tr class="bg-gray-50">
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Due Date</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Priority</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody class="bg-white divide-y divide-gray-200">
                                 @foreach($tasks as $task)
-                                    <tr>
-                                        <td>{{ $task->title }}</td>
-                                        <td>{{ $task->description }}</td>
-                                        <td>{{ $task->due_date ? $task->due_date->format('Y-m-d') : 'N/A' }}</td>
-                                        <td>
-                                            <span class="badge bg-{{ $task->priority === 'high' ? 'danger' : ($task->priority === 'medium' ? 'warning' : 'info') }}">
+                                    <tr class="hover:bg-gray-50">
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                            {{ $task->title }}
+                                        </td>
+                                        <td class="px-6 py-4 text-sm text-gray-500">
+                                            {{ $task->description }}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                            {{ $task->due_date ? $task->due_date->format('Y-m-d') : 'N/A' }}
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                                {{ $task->priority === 'high' ? 'bg-red-100 text-red-800' : 
+                                                   ($task->priority === 'medium' ? 'bg-yellow-100 text-yellow-800' : 
+                                                   'bg-blue-100 text-blue-800') }}">
                                                 {{ ucfirst($task->priority) }}
                                             </span>
                                         </td>
-                                        <td>
-                                            <span class="badge bg-{{ $task->is_completed ? 'success' : 'secondary' }}">
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
+                                                {{ $task->is_completed ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' }}">
                                                 {{ $task->is_completed ? 'Completed' : 'Pending' }}
                                             </span>
                                         </td>
-                                        <td>
-                                            <form method="POST" action="{{ route('tasks.toggle', $task->id) }}" class="d-inline">
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                                            <form method="POST" action="{{ route('tasks.toggle', $task->id) }}" class="inline">
                                                 @csrf
-                                                <button type="submit" class="btn btn-sm {{ $task->is_completed ? 'btn-secondary' : 'btn-success' }}">
+                                                <button type="submit" 
+                                                    class="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded
+                                                    {{ $task->is_completed ? 
+                                                        'text-gray-700 bg-gray-100 hover:bg-gray-200' : 
+                                                        'text-green-700 bg-green-100 hover:bg-green-200' }}">
+                                                    <i class="fas {{ $task->is_completed ? 'fa-times' : 'fa-check' }} mr-1"></i>
                                                     {{ $task->is_completed ? 'Mark Pending' : 'Mark Complete' }}
                                                 </button>
                                             </form>
                                             
-                                            <button type="button" class="btn btn-sm btn-warning" 
-                                                    data-bs-toggle="modal" 
-                                                    data-bs-target="#editTaskModal{{ $task->id }}">
+                                            <a href="{{ route('tasks.edit', $task->id) }}" 
+                                               class="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-yellow-700 bg-yellow-100 hover:bg-yellow-200">
+                                                <i class="fas fa-edit mr-1"></i>
                                                 Edit
-                                            </button>
+                                            </a>
 
-                                            <form method="POST" action="{{ route('tasks.destroy', $task->id) }}" class="d-inline">
+                                            <form method="POST" action="{{ route('tasks.destroy', $task->id) }}" class="inline">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-sm btn-danger" 
+                                                <button type="submit" 
+                                                        class="inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded text-red-700 bg-red-100 hover:bg-red-200"
                                                         onclick="return confirm('Are you sure you want to delete this task?')">
+                                                    <i class="fas fa-trash mr-1"></i>
                                                     Delete
                                                 </button>
                                             </form>
@@ -76,103 +120,74 @@
                                 @endforeach
                             </tbody>
                         </table>
-                    @endif
-                </div>
+                    </div>
+                @endif
             </div>
         </div>
     </div>
-</div>
 
-@if($todoList)
-<div class="modal fade" id="createTaskModal" tabindex="-1" aria-labelledby="createTaskModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="createTaskModalLabel">Create New Task</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    @if($todoList)
+    <div class="modal fade" id="createTaskModal" tabindex="-1" aria-labelledby="createTaskModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header border-b bg-gray-50">
+                    <h5 class="text-lg font-semibold text-gray-900" id="createTaskModalLabel">Create New Task</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form method="POST" action="{{ route('tasks.store', $todoList) }}">
+                    @csrf
+                    <div class="modal-body p-6">
+                        <div class="space-y-4">
+                            <div>
+                                <label for="title" class="block text-sm font-medium text-gray-700">Title</label>
+                                <input type="text" 
+                                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                       id="title" 
+                                       name="title" 
+                                       required>
+                            </div>
+                            <div>
+                                <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+                                <textarea class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                          id="description" 
+                                          name="description" 
+                                          rows="3"></textarea>
+                            </div>
+                            <div>
+                                <label for="due_date" class="block text-sm font-medium text-gray-700">Due Date</label>
+                                <input type="date" 
+                                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                       id="due_date" 
+                                       name="due_date">
+                            </div>
+                            <div>
+                                <label for="priority" class="block text-sm font-medium text-gray-700">Priority</label>
+                                <select class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+                                        id="priority" 
+                                        name="priority" 
+                                        required>
+                                    <option value="low">Low</option>
+                                    <option value="medium">Medium</option>
+                                    <option value="high">High</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer bg-gray-50 px-6 py-3">
+                        <button type="button" 
+                                class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50"
+                                data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" 
+                                class="ml-3 px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700">
+                            Create Task
+                        </button>
+                    </div>
+                </form>
             </div>
-            <form method="POST" action="{{ route('tasks.store', $todoList) }}">
-                @csrf
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="title" class="form-label">Title</label>
-                        <input type="text" class="form-control" id="title" name="title" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="description" class="form-label">Description</label>
-                        <textarea class="form-control" id="description" name="description" rows="3"></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="due_date" class="form-label">Due Date</label>
-                        <input type="date" class="form-control" id="due_date" name="due_date">
-                    </div>
-                    <div class="mb-3">
-                        <label for="priority" class="form-label">Priority</label>
-                        <select class="form-select" id="priority" name="priority" required>
-                            <option value="low">Low</option>
-                            <option value="medium">Medium</option>
-                            <option value="high">High</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Create Task</button>
-                </div>
-            </form>
         </div>
     </div>
-</div>
-@endif
+    @endif
 
-@foreach($tasks as $task)
-<div class="modal fade" id="editTaskModal{{ $task->id }}" tabindex="-1" aria-labelledby="editTaskModalLabel{{ $task->id }}" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editTaskModalLabel{{ $task->id }}">Edit Task</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <form method="POST" action="{{ route('tasks.update', $task->id) }}">
-                @csrf
-                @method('PUT')
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="title{{ $task->id }}" class="form-label">Title</label>
-                        <input type="text" class="form-control" id="title{{ $task->id }}" name="title" value="{{ $task->title }}" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="description{{ $task->id }}" class="form-label">Description</label>
-                        <textarea class="form-control" id="description{{ $task->id }}" name="description" rows="3">{{ $task->description }}</textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="due_date{{ $task->id }}" class="form-label">Due Date</label>
-                        <input type="date" class="form-control" id="due_date{{ $task->id }}" name="due_date" value="{{ $task->due_date ? $task->due_date->format('Y-m-d') : '' }}">
-                    </div>
-                    <div class="mb-3">
-                        <label for="priority{{ $task->id }}" class="form-label">Priority</label>
-                        <select class="form-select" id="priority{{ $task->id }}" name="priority" required>
-                            <option value="low" {{ $task->priority === 'low' ? 'selected' : '' }}>Low</option>
-                            <option value="medium" {{ $task->priority === 'medium' ? 'selected' : '' }}>Medium</option>
-                            <option value="high" {{ $task->priority === 'high' ? 'selected' : '' }}>High</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Update Task</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-@endforeach
-
-@if(session('success'))
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        {{ session('success') }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-@endif
-
-@endsection
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

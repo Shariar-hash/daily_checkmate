@@ -30,4 +30,6 @@ class AuthServiceProvider extends ServiceProvider
         // Optional: Additional gate definitions if needed
         Gate::policy(Reminder::class, ReminderPolicy::class);
     }
+
+    
 }

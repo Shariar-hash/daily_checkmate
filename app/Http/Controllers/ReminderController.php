@@ -39,7 +39,11 @@ class ReminderController extends Controller
 
     public function update(Request $request, Reminder $reminder)
     {
-        $this->authorize('update', $reminder);
+        
+        if (Gate::denies('update', $reminder)) {
+            abort(403, 'You are not authorized to update this reminder.');
+        }
+    
         
         $validated = $request->validate([
             'title' => 'required|string|max:255',
@@ -47,23 +51,35 @@ class ReminderController extends Controller
             'reminder_time' => 'required|date',
             'color' => 'nullable|string|max:7'
         ]);
-
+    
+        
         $this->reminderService->update($reminder, $validated);
+    
+        
         return redirect()->route('reminders.index')->with('success', 'Reminder updated successfully');
     }
 
     public function snooze(Request $request, Reminder $reminder)
     {
-        $this->authorize('update', $reminder);
-        
+        if (Gate::denies('update', $reminder)) {
+            abort(403, 'You are not authorized to snooze this reminder.');
+        }
+    
         $validated = $request->validate([
             'snooze_until' => 'required|date|after:now'
         ]);
-
-        $this->reminderService->snooze($reminder, $validated['snooze_until']);
-        return redirect()->route('reminders.index')->with('success', 'Reminder snoozed');
+    
+       
+        $snoozeUntil = new \DateTime($validated['snooze_until']);
+    
+        
+        $reminder->update([
+            'is_snoozed' => true,
+            'snoozed_until' => $snoozeUntil, 
+        ]);
+    
+        return redirect()->route('reminders.index')->with('success', 'Reminder snoozed successfully');
     }
-
     public function destroy(Reminder $reminder)
     {
         
@@ -76,4 +92,21 @@ class ReminderController extends Controller
         $this->reminderService->delete($reminder);
         return redirect()->route('reminders.index')->with('success', 'Reminder deleted successfully');
     }
+
+
+    public function create()
+{
+    return view('reminders.create');
+}
+
+public function edit($id)
+    {
+        
+        $reminder = Reminder::findOrFail($id);
+
+        
+        return view('reminders.edit', compact('reminder'));
+    }
+
+
 }

@@ -7,10 +7,17 @@ use App\Http\Controllers\{
    IdeaController,
    WeeklyReflectionController,
    DashboardController,
-   ProfileController
+   ProfileController,
+   BreakController
 };
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\FullCalenderController;
+
+
+Route::get('fullcalender', [FullCalenderController::class, 'index']);
+Route::post('fullcalenderAjax', [FullCalenderController::class, 'ajax']);
+Route::resource('fullcalender', FullCalenderController::class);
 
 
 Route::get('/', function () {
@@ -19,20 +26,22 @@ Route::get('/', function () {
 
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard', [
-            'recentTasks' => Auth::user()->tasks()->latest()->take(3)->get(),
-            'todaysHabits' => Auth::user()->habits()->get(),
-            'upcomingReminders' => Auth::user()->reminders()->latest()->take(3)->get()
-        ]);
-    })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-
-
-
+    Route::get('/tasks/{task}/edit', [TaskController::class, 'edit'])->name('tasks.edit');
+  
+Route::get('/reminders/create', [ReminderController::class, 'create'])->name('reminders.create');
 
     Route::resource('tasks', TaskController::class);
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::resource('reminders', ReminderController::class);
+    Route::post('tasks/{task}/toggle', [TaskController::class, 'toggleComplete'])->name('tasks.toggle');
+    Route::post('reminders/{reminder}/snooze', [ReminderController::class, 'snooze'])->name('reminders.snooze');
+    
+    Route::resource('reminders', ReminderController::class);
+    Route::resource('habits', HabitController::class);
+    Route::get('/breaks', [BreakController::class, 'index'])->name('breaks.index');
+    Route::resource('tasks', TaskController::class);
+   
    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
