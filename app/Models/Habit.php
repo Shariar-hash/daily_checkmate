@@ -12,7 +12,8 @@ class Habit extends Model
         'description',
         'frequency',
         'streak',
-        'completion_rate'
+        'completion_rate',
+        'color'
     ];
 
     public function user()

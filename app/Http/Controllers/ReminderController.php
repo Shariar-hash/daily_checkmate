@@ -22,6 +22,11 @@ class ReminderController extends Controller
         return view('reminders.index', compact('reminders'));
     }
 
+    public function create()
+    {
+        return view('reminders.create');
+    }
+
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -31,8 +36,20 @@ class ReminderController extends Controller
             'color' => 'nullable|string|max:7'
         ]);
 
-        $this->reminderService->create($validated);
+        $reminder = $this->reminderService->create($validated);
         return redirect()->route('reminders.index')->with('success', 'Reminder created successfully');
+    }
+
+    public function show(Reminder $reminder)
+    {
+        $this->authorize('view', $reminder);
+        return view('reminders.show', compact('reminder'));
+    }
+
+    public function edit(Reminder $reminder)
+    {
+        $this->authorize('update', $reminder);
+        return view('reminders.edit', compact('reminder'));
     }
 
     public function update(Request $request, Reminder $reminder)

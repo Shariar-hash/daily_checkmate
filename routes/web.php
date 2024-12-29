@@ -9,7 +9,14 @@ use App\Http\Controllers\{
     WeeklyReflectionController,
     ProfileController
 };
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
+
+
+Route::get('/fetch-quote', [DashboardController::class, 'fetchQuote']);
+
+
+
 
 
 Route::get('/', function () {
@@ -17,7 +24,19 @@ Route::get('/', function () {
 })->name('welcome');
 
 Route::middleware(['auth'])->group(function () {
-    Route::view('/dashboard', 'dashboard')->name('dashboard');
+    Route::get('/dashboard', function () {
+        return view('dashboard', [
+            'recentTodoLists' => Auth::user()->todoLists()
+                ->where('is_archived', false)
+                ->withCount('tasks')
+                ->latest()
+                ->take(3)
+                ->get(),
+            // Update these lines to fetch all habits and reminders
+            'habits' => Auth::user()->habits()->get(), // Changed from todaysHabits to habits
+            'reminders' => Auth::user()->reminders()->orderBy('reminder_time')->get() // Changed from upcomingReminders to all reminders
+        ]);
+    })->name('dashboard');
 
     
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -41,14 +60,17 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('reminders', ReminderController::class);
 
     
-    Route::post('/habits/{habit}/log', [HabitController::class, 'logCompletion'])->name('habits.log');
+    // Route::post('/habits/{habit}/log', [HabitController::class, 'logCompletion'])->name('habits.log');
     Route::resource('habits', HabitController::class);
-
+    Route::post('/habits/{habit}/log-completion', [HabitController::class, 'logCompletion'])
+        ->name('habits.logCompletion');
     
     Route::resource('ideas', IdeaController::class);
 
     
     Route::resource('reflections', WeeklyReflectionController::class);
+    Route::get('/fetch-quote', [DashboardController::class, 'fetchQuote']);
+
 });
 
 
