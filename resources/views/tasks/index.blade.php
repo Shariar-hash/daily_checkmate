@@ -12,28 +12,13 @@
     
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div class="mb-8">
-            @if($todoList)
-                <button type="button" 
-                        class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition-colors duration-150 ease-in-out"
-                        data-bs-toggle="modal" 
-                        data-bs-target="#createTaskModal">
-                    <i class="fas fa-plus mr-2"></i>
-                    Add New Task
-                </button>
-            @else
-                <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
-                    <div class="flex">
-                        <div class="flex-shrink-0">
-                            <i class="fas fa-exclamation-triangle text-yellow-400"></i>
-                        </div>
-                        <div class="ml-3">
-                            <p class="text-sm text-yellow-700">
-                                Please create a todo list first to add tasks.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            @endif
+            <button type="button" 
+                    class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition-colors duration-150 ease-in-out"
+                    data-bs-toggle="modal" 
+                    data-bs-target="#createTaskModal">
+                <i class="fas fa-plus mr-2"></i>
+                Add New Task
+            </button>
         </div>
 
         <div class="bg-white rounded-lg shadow-sm overflow-hidden">
@@ -45,7 +30,7 @@
                 @if($tasks->isEmpty())
                     <div class="text-center py-12">
                         <i class="fas fa-tasks text-gray-300 text-5xl mb-4"></i>
-                        <p class="text-gray-500">No tasks available.</p>
+                        <p class="text-gray-500">No tasks available. Create your first task!</p>
                     </div>
                 @else
                     <div class="overflow-x-auto">
@@ -126,7 +111,7 @@
         </div>
     </div>
 
-    @if($todoList)
+    <!-- Create Task Modal -->
     <div class="modal fade" id="createTaskModal" tabindex="-1" aria-labelledby="createTaskModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -134,7 +119,7 @@
                     <h5 class="text-lg font-semibold text-gray-900" id="createTaskModalLabel">Create New Task</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form method="POST" action="{{ route('tasks.store', $todoList) }}">
+                <form method="POST" action="{{ route('tasks.store') }}">
                     @csrf
                     <div class="modal-body p-6">
                         <div class="space-y-4">
@@ -186,7 +171,6 @@
             </div>
         </div>
     </div>
-    @endif
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
 </body>
